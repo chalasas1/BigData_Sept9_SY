@@ -1,0 +1,290 @@
+Week 2 home work -- First attempt
+---------------------------------
+
+login as: ubuntu
+Authenticating with public key "imported-openssh-key"
+Welcome to Ubuntu 16.04.2 LTS (GNU/Linux 4.4.0-1022-aws x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+40 packages can be updated.
+0 updates are security updates.
+
+
+*** System restart required ***
+Last login: Thu Sep 21 00:50:05 2017 from 65.96.107.157
+ubuntu@edgenode:~$ sudo su hdfs
+hdfs@edgenode:/home/ubuntu$ ls
+employee  practice
+hdfs@edgenode:/home/ubuntu$ cd /user/ubuntu/employee
+bash: cd: /user/ubuntu/employee: No such file or directory
+hdfs@edgenode:/home/ubuntu$ cd employee
+hdfs@edgenode:/home/ubuntu/employee$ ls
+empl.hql  employees.txt
+hdfs@edgenode:/home/ubuntu/employee$ cat empl.hql
+CREATE EXTERNAL TABLE IF NOT EXISTS employee
+( name STRING,
+salary FLOAT,
+subordinates ARRAY<STRING>,
+deductions MAP<STRING, FLOAT>,
+address STRUCT<street:STRING, city:STRING, state:STRING, zip:INT>
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\001'
+COLLECTION ITEMS TERMINATED BY '\002'
+MAP KEYS TERMINATED BY '\003'
+LINES TERMINATED BY '\n' STORED AS TEXTFILE
+LOCATION '/user/ubuntu/employee';
+
+hdfs@edgenode:/home/ubuntu/employee$ hdfs dfs -ls/user/ubuntu/employee
+-ls/user/ubuntu/employee: Unknown command
+Usage: hadoop fs [generic options]
+        [-appendToFile <localsrc> ... <dst>]
+        [-cat [-ignoreCrc] <src> ...]
+        [-checksum <src> ...]
+        [-chgrp [-R] GROUP PATH...]
+        [-chmod [-R] <MODE[,MODE]... | OCTALMODE> PATH...]
+        [-chown [-R] [OWNER][:[GROUP]] PATH...]
+        [-copyFromLocal [-f] [-p] [-l] <localsrc> ... <dst>]
+        [-copyToLocal [-p] [-ignoreCrc] [-crc] <src> ... <localdst>]
+        [-count [-q] [-h] [-v] [-t [<storage type>]] [-u] <path> ...]
+        [-cp [-f] [-p | -p[topax]] <src> ... <dst>]
+        [-createSnapshot <snapshotDir> [<snapshotName>]]
+        [-deleteSnapshot <snapshotDir> <snapshotName>]
+        [-df [-h] [<path> ...]]
+        [-du [-s] [-h] <path> ...]
+        [-expunge]
+        [-find <path> ... <expression> ...]
+        [-get [-p] [-ignoreCrc] [-crc] <src> ... <localdst>]
+        [-getfacl [-R] <path>]
+        [-getfattr [-R] {-n name | -d} [-e en] <path>]
+        [-getmerge [-nl] <src> <localdst>]
+        [-help [cmd ...]]
+        [-ls [-C] [-d] [-h] [-q] [-R] [-t] [-S] [-r] [-u] [<path> ...]]
+        [-mkdir [-p] <path> ...]
+        [-moveFromLocal <localsrc> ... <dst>]
+        [-moveToLocal <src> <localdst>]
+        [-mv <src> ... <dst>]
+        [-put [-f] [-p] [-l] <localsrc> ... <dst>]
+        [-renameSnapshot <snapshotDir> <oldName> <newName>]
+        [-rm [-f] [-r|-R] [-skipTrash] [-safely] <src> ...]
+        [-rmdir [--ignore-fail-on-non-empty] <dir> ...]
+        [-setfacl [-R] [{-b|-k} {-m|-x <acl_spec>} <path>]|[--set <acl_spec> <path>]]
+        [-setfattr {-n name [-v value] | -x name} <path>]
+        [-setrep [-R] [-w] <rep> <path> ...]
+        [-stat [format] <path> ...]
+        [-tail [-f] <file>]
+        [-test -[defsz] <path>]
+        [-text [-ignoreCrc] <src> ...]
+        [-touchz <path> ...]
+        [-truncate [-w] <length> <path> ...]
+        [-usage [cmd ...]]
+
+Generic options supported are
+-conf <configuration file>     specify an application configuration file
+-D <property=value>            use value for given property
+-fs <local|namenode:port>      specify a namenode
+-jt <local|resourcemanager:port>    specify a ResourceManager
+-files <comma separated list of files>    specify comma separated files to be copied to the map reduce cluster
+-libjars <comma separated list of jars>    specify comma separated jar files to include in the classpath.
+-archives <comma separated list of archives>    specify comma separated archives to be unarchived on the compute machines.
+
+The general command line syntax is
+bin/hadoop command [genericOptions] [commandOptions]
+
+hdfs@edgenode:/home/ubuntu/employee$ -ls /user/ubuntu/employee
+No command '-ls' found, did you mean:
+ Command 'ls' from package 'coreutils' (main)
+ Command 'als' from package 'atool' (universe)
+ Command 'fls' from package 'sleuthkit' (universe)
+ Command 'bls' from package 'bareos-tools' (universe)
+ Command 'bls' from package 'bacula-sd' (universe)
+ Command 'i-ls' from package 'integrit' (universe)
+ Command 'hls' from package 'hfsutils' (main)
+ Command 'ols' from package 'speech-tools' (universe)
+ Command 'jls' from package 'sleuthkit' (universe)
+ Command 'ils' from package 'sleuthkit' (universe)
+-ls: command not found
+hdfs@edgenode:/home/ubuntu/employee$ ls /user/ubuntu/employee
+ls: cannot access '/user/ubuntu/employee': No such file or directory
+hdfs@edgenode:/home/ubuntu/employee$ ls
+empl.hql  employees.txt
+hdfs@edgenode:/home/ubuntu/employee$ hive
+log4j:WARN No such property [maxFileSize] in org.apache.log4j.DailyRollingFileAppender.
+
+Logging initialized using configuration in file:/etc/hive/2.6.2.0-205/0/hive-log4j.properties
+hive> use default;
+OK
+Time taken: 1.426 seconds
+hive> select * from employees;
+FAILED: SemanticException [Error 10001]: Line 1:14 Table not found 'employees'
+hive> select * from employee;
+OK
+Time taken: 0.421 seconds
+hive> exit
+    > ;
+hdfs@edgenode:/home/ubuntu/employee$ exit
+exit
+ubuntu@edgenode:~$ hdfs dfs -ls /user/ubuntu
+Found 6 items
+drwxr-xr-x   - ubuntu ubuntu          0 2017-09-16 20:22 /user/ubuntu/.hiveJars
+-rw-r--r--   3 ubuntu ubuntu         22 2017-09-16 20:08 /user/ubuntu/age.csv
+drwxrwxr-x   - ubuntu ubuntu          0 2017-09-20 01:06 /user/ubuntu/employee
+drwxr-xr-x   - hdfs   ubuntu          0 2017-09-20 01:10 /user/ubuntu/employeehdfs
+-rw-r--r--   3 ubuntu ubuntu         14 2017-09-16 20:31 /user/ubuntu/new_ingest_9_15_2017.csv
+-rw-r--r--   3 ubuntu ubuntu         14 2017-09-16 20:32 /user/ubuntu/new_ingest_9_16_2017.csv
+ubuntu@edgenode:~$ hdfs dfs -ls /user/ubuntu/employee
+ubuntu@edgenode:~$ ls
+employee  practice
+ubuntu@edgenode:~$ hdfs dfs -put employee/employees.txt
+ubuntu@edgenode:~$ hdfs dfs -put employee/employees.txt /user/ubuntu/employee
+ubuntu@edgenode:~$ ls
+employee  practice
+ubuntu@edgenode:~$ hdfs dfs -ls /user/ubuntu/employee
+Found 1 items
+-rw-r--r--   3 ubuntu ubuntu        784 2017-09-21 01:53 /user/ubuntu/employee/employees.txt
+ubuntu@edgenode:~$ hive
+log4j:WARN No such property [maxFileSize] in org.apache.log4j.DailyRollingFileAppender.
+
+Logging initialized using configuration in file:/etc/hive/2.6.2.0-205/0/hive-log4j.properties
+hive> use default;
+OK
+Time taken: 1.508 seconds
+hive> select * from employee;
+OK
+John Doe        100000.0        ["Mary Smith","Todd Jones"]     {"Federal Taxes":0.2,"State Taxes":0.05,"Insurance":0.1}        {"street":"1 Michigan Ave.","city":"Chicago","state":"IL","zip":60600}
+Mary Smith      80000.0 ["Bill King"]   {"Federal Taxes":0.2,"State Taxes":0.05,"Insurance":0.1}        {"street":"100 Ontario St.","city":"Chicago","state":"IL","zip":60601}
+Todd Jones      70000.0 []      {"Federal Taxes":0.15,"State Taxes":0.03,"Insurance":0.1}       {"street":"200 Chicago Ave.","city":"Oak Park","state":"IL","zip":60700}
+Bill King       60000.0 []      {"Federal Taxes":0.15,"State Taxes":0.03,"Insurance":0.1}       {"street":"300 Obscure Dr.","city":"Obscuria","state":"IL","zip":60100}
+Boss Man        200000.0        ["John Doe","Fred Finance"]     {"Federal Taxes":0.3,"State Taxes":0.07,"Insurance":0.05}       {"street":"1 Pretentious Drive.","city":"Chicago","state":"IL","zip":60500}
+Fred Finance    150000.0        ["Stacy Accountant"]    {"Federal Taxes":0.3,"State Taxes":0.07,"Insurance":0.05}       {"street":"2 Pretentious Drive.","city":"Chicago","state":"IL","zip":60500}
+Stacy Accountant        60000.0 []      {"Federal Taxes":0.15,"State Taxes":0.03,"Insurance":0.1}       {"street":"300 Main St.","city":"Naperville","state":"IL","zip":60563}
+Time taken: 0.466 seconds, Fetched: 7 row(s)
+hive>
+
+
+---week 2 home work 2nd attempt
+login as: ubuntu
+Authenticating with public key "imported-openssh-key"
+Welcome to Ubuntu 16.04.2 LTS (GNU/Linux 4.4.0-1022-aws x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+40 packages can be updated.
+0 updates are security updates.
+
+
+*** System restart required ***
+Last login: Thu Sep 21 00:52:22 2017 from 65.96.107.157
+ubuntu@edgenode:~$ ls
+employee  practice
+ubuntu@edgenode:~$ hdfs dfs -ls /user/ubuntu/employee
+Found 1 items
+-rw-r--r--   3 ubuntu ubuntu        784 2017-09-21 01:53 /user/ubuntu/employee/employees.txt
+ubuntu@edgenode:~$ cat empl.hql
+cat: empl.hql: No such file or directory
+ubuntu@edgenode:~$ sudo su hdfs
+hdfs@edgenode:/home/ubuntu$ cat empl.hql
+cat: empl.hql: No such file or directory
+hdfs@edgenode:/home/ubuntu$ cd employee
+hdfs@edgenode:/home/ubuntu/employee$ cat empl.hql
+CREATE EXTERNAL TABLE IF NOT EXISTS employee
+( name STRING,
+salary FLOAT,
+subordinates ARRAY<STRING>,
+deductions MAP<STRING, FLOAT>,
+address STRUCT<street:STRING, city:STRING, state:STRING, zip:INT>
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\001'
+COLLECTION ITEMS TERMINATED BY '\002'
+MAP KEYS TERMINATED BY '\003'
+LINES TERMINATED BY '\n' STORED AS TEXTFILE
+LOCATION '/user/ubuntu/employee';
+
+hdfs@edgenode:/home/ubuntu/employee$ exit
+exit
+ubuntu@edgenode:~$ ls
+employee  practice
+ubuntu@edgenode:~$ hdfs dfs -ls /user/ubuntu/employee
+Found 1 items
+-rw-r--r--   3 ubuntu ubuntu        784 2017-09-21 01:53 /user/ubuntu/employee/employees.txt
+ubuntu@edgenode:~$ hive
+log4j:WARN No such property [maxFileSize] in org.apache.log4j.DailyRollingFileAppender.
+
+Logging initialized using configuration in file:/etc/hive/2.6.2.0-205/0/hive-log4j.properties
+hive> use default;
+OK
+Time taken: 1.344 seconds
+hive> SELECT name FROM employee WHERE deductions['Federal Taxes'] > 0.2;
+OK
+John Doe
+Mary Smith
+Boss Man
+Fred Finance
+Time taken: 0.642 seconds, Fetched: 4 row(s)
+hive> SELECT name FROM employee WHERE subordinates[1] = 'Todd Jones';
+OK
+John Doe
+Time taken: 0.076 seconds, Fetched: 1 row(s)
+hive> SELECT name FROM employee WHERE size(subordinates) > 0;
+OK
+John Doe
+Mary Smith
+Boss Man
+Fred Finance
+Time taken: 0.047 seconds, Fetched: 4 row(s)
+hive> SELECT name FROM employee WHERE address.zip = 60050;
+OK
+Time taken: 0.062 seconds
+hive> SELECT e.name, e.subordinates[0] FROM employee e;
+OK
+John Doe        Mary Smith
+Mary Smith      Bill King
+Todd Jones      NULL
+Bill King       NULL
+Boss Man        John Doe
+Fred Finance    Stacy Accountant
+Stacy Accountant        NULL
+Time taken: 0.056 seconds, Fetched: 7 row(s)
+hive> SELECT e.name, e.subordinates FROM employee e WHERE size(e.subordinates) > 0;
+OK
+John Doe        ["Mary Smith","Todd Jones"]
+Mary Smith      ["Bill King"]
+Boss Man        ["John Doe","Fred Finance"]
+Fred Finance    ["Stacy Accountant"]
+Time taken: 0.049 seconds, Fetched: 4 row(s)
+hive> SELECT e.name, e.deductions['Federal Taxes'] FROM employee e;
+OK
+John Doe        0.2
+Mary Smith      0.2
+Todd Jones      0.15
+Bill King       0.15
+Boss Man        0.3
+Fred Finance    0.3
+Stacy Accountant        0.15
+Time taken: 0.039 seconds, Fetched: 7 row(s)
+hive> SELECT e.name, e.address FROM employee e WHERE e.address.city = 'Chicago';
+OK
+John Doe        {"street":"1 Michigan Ave.","city":"Chicago","state":"IL","zip":60600}
+Mary Smith      {"street":"100 Ontario St.","city":"Chicago","state":"IL","zip":60601}
+Boss Man        {"street":"1 Pretentious Drive.","city":"Chicago","state":"IL","zip":60500}
+Fred Finance    {"street":"2 Pretentious Drive.","city":"Chicago","state":"IL","zip":60500}
+Time taken: 0.055 seconds, Fetched: 4 row(s)
+hive> SELECT e.name, e.address FROM employee e WHERE e.address.city LIKE 'C%';
+OK
+John Doe        {"street":"1 Michigan Ave.","city":"Chicago","state":"IL","zip":60600}
+Mary Smith      {"street":"100 Ontario St.","city":"Chicago","state":"IL","zip":60601}
+Boss Man        {"street":"1 Pretentious Drive.","city":"Chicago","state":"IL","zip":60500}
+Fred Finance    {"street":"2 Pretentious Drive.","city":"Chicago","state":"IL","zip":60500}
+Time taken: 0.04 seconds, Fetched: 4 row(s)
